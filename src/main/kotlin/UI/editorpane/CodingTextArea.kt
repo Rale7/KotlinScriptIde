@@ -32,20 +32,22 @@ import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import data.SelectedFile
 
 @Composable
 fun CodingTextArea(
+    selectedFile: SelectedFile,
+    changeText: (TextFieldValue) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
     val horizontalScrollState = rememberScrollState()
     val verticalScrollState = rememberScrollState()
 
     Box(
         modifier = modifier
     ) {
-        val numberOfLines = text.text.lines().size
-        val currentLine = text.text.substring(0, text.selection.start).count { it == '\n' }
+        val numberOfLines = selectedFile.content.text.lines().size
+        val currentLine = selectedFile.content.text.substring(0, selectedFile.content.selection.start).count { it == '\n' }
         val lineHeight = with(LocalDensity.current) {
             (15.sp.toPx() * 1.2f).toDp()
         }
@@ -84,8 +86,8 @@ fun CodingTextArea(
 
 
             BasicTextField(
-                value = text,
-                onValueChange = { text = it },
+                value = selectedFile.content,
+                onValueChange = changeText,
                 modifier = Modifier.fillMaxSize()
                     .padding(start = 10.dp)
                     .background(color = Color.Transparent)

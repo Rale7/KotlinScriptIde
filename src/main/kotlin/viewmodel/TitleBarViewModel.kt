@@ -1,12 +1,16 @@
 package viewmodel
 
-import data.AppState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import repositories.FolderRepository
+import repositories.TabsRepository
 import javax.swing.JFileChooser
 import javax.swing.filechooser.FileSystemView
 
-class TitleBarViewModel(private val appState: AppState) {
+class TitleBarViewModel(
+    private val folderRepository: FolderRepository,
+    private val tabsRepository: TabsRepository
+) {
 
     data class TitleBarState(
         val fileExpanded: Boolean = false,
@@ -31,7 +35,8 @@ class TitleBarViewModel(private val appState: AppState) {
         val result = fileChooser.showOpenDialog(null)
         if (result == JFileChooser.APPROVE_OPTION) {
             val folderPath = fileChooser.selectedFile.absolutePath
-            appState.changeFolder(folderPath)
+            folderRepository.changeFolder(folderPath)
+            tabsRepository.clearTabs()
         }
     }
 

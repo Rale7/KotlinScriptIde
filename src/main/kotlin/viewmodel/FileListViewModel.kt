@@ -1,15 +1,20 @@
 package viewmodel
 
-import data.AppState
+import data.FolderFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import repositories.FolderRepository
+import repositories.TabsRepository
 import java.io.File
 
-class FileListViewModel(private val appState: AppState) {
+class FileListViewModel(
+    private val folderRepository: FolderRepository,
+    private val tabsRepository: TabsRepository
+) {
 
     data class FileListState (
         val showDialog: Boolean = false,
@@ -20,8 +25,8 @@ class FileListViewModel(private val appState: AppState) {
     private val _state = MutableStateFlow(FileListState())
     val state = _state.asStateFlow()
 
-    val path = appState.folder
-    val files = appState.files
+    val path = folderRepository.folder
+    val files = folderRepository.files
 
     fun showDialog() {
         _state.value = state.value.copy(showDialog = true)
@@ -49,4 +54,7 @@ class FileListViewModel(private val appState: AppState) {
         }
     }
 
+    fun addFileToTab(folderFile: FolderFile) {
+        tabsRepository.addTabFile(folderFile)
+    }
 }

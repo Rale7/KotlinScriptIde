@@ -1,13 +1,17 @@
 package koin
 
-import data.AppState
 import org.koin.dsl.module
+import repositories.FolderRepository
+import repositories.TabsRepository
+import viewmodel.EditorPaneViewModel
 import viewmodel.FileListViewModel
 import viewmodel.TitleBarViewModel
 
 val appModule = module {
-    single { AppState() }
+    single { FolderRepository() }
+    single { TabsRepository() }
 
-    factory { TitleBarViewModel(get()) }
-    factory { FileListViewModel(get()) }
+    factory { TitleBarViewModel(get(), get()) }
+    factory { FileListViewModel(get(), get()) }
+    factory { EditorPaneViewModel(get()) }
 }

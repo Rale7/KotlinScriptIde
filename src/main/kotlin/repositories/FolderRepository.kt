@@ -1,12 +1,10 @@
-package data
+package repositories
 
+import data.Folder
+import data.FolderFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -14,14 +12,13 @@ import java.nio.file.FileSystems
 import java.nio.file.Paths
 import java.nio.file.StandardWatchEventKinds
 
-class AppState {
+class FolderRepository {
 
     private val _folder = MutableStateFlow(Folder())
     val folder = _folder.asStateFlow()
 
     private val _files = MutableStateFlow(listOf<FolderFile>())
     val files = _files.asStateFlow()
-
 
     fun changeFolder(path: String) {
         _folder.value = folder.value.copy(path = path)
@@ -52,7 +49,7 @@ class AppState {
             File(path).listFiles()
                 ?.toList()
                 ?.filter { it.isFile && (it.name.endsWith("kts") || it.name.endsWith("kt")) }
-                ?.mapNotNull { FolderFile(it.name) } ?: emptyList())
+                ?.mapNotNull { FolderFile(name = it.name, directory = path) } ?: emptyList())
 
         while (true) {
             val key = watchService.take()
@@ -60,13 +57,12 @@ class AppState {
                 File(path).listFiles()
                     ?.toList()
                     ?.filter { it.isFile && (it.name.endsWith("kts") || it.name.endsWith("kt")) }
-                    ?.mapNotNull { FolderFile(it.name) } ?: emptyList())
+                    ?.mapNotNull { FolderFile(name = it.name, directory = path) } ?: emptyList())
 
             key.pollEvents()
             key.reset()
         }
 
-    }
-        .flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO)
 
 }

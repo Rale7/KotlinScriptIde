@@ -14,28 +14,41 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import data.SelectedFile
+import org.koin.compose.koinInject
+import viewmodel.EditorPaneViewModel
 
 @Composable
 fun EditorPane(
     modifier: Modifier = Modifier,
+    viewModel: EditorPaneViewModel = koinInject(),
 ) {
-
+    val tabs by viewModel.tabs.collectAsState(initial = emptyList())
+    val selectedFile by viewModel.selectedFile.collectAsState()
 
     Column(
         modifier = modifier
     ) {
 
         EditorTabs(
+            tabs = tabs,
+            selectedTab = selectedFile,
+            onClickTab = viewModel::switchTab,
+            onCloseTab = viewModel::closeTab,
             modifier = Modifier.fillMaxWidth()
-                .height(30.dp)
+                .height(40.dp)
                 .background(
                     color = tonalA0,
                 )
         )
 
-        CodingTextArea(
-            modifier = Modifier.fillMaxWidth()
-        )
+        if (selectedFile.fileName.isNotBlank()) {
+            CodingTextArea(
+                selectedFile = selectedFile,
+                changeText = viewModel::changeText,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
 
 
 

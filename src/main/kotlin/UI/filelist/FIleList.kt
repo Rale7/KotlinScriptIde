@@ -44,27 +44,11 @@ fun FileList(
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(files) {
 
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(start = 20.dp, top = 2.dp)
-                        .height(20.dp)
-                ) {
-                    Icon(
-                        imageVector = SimpleIcons.Kotlin,
-                        contentDescription = "logo",
-                        tint = primaryA2,
-                        modifier = Modifier.size(15.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(5.dp))
-
-                    Text(
-                        text = it.name,
-                        color = Color.White,
-                    )
-                }
+                FileItem(
+                    it.name,
+                    onClick = {},
+                    onDoubleClick = { viewModel.addFileToTab(it) },
+                )
             }
         }
     }
