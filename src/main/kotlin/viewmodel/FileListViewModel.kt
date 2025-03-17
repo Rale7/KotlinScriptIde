@@ -40,6 +40,9 @@ class FileListViewModel(private val appState: AppState) {
             if (!File(path.value.path, "${_state.value.newFileName}.kt").createNewFile()) {
                 withContext(Dispatchers.Default) {
                     _state.value = state.value.copy(isError = true)
+                }
+            } else {
+                withContext(Dispatchers.Default) {
                     hideDialog()
                 }
             }

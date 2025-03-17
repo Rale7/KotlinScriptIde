@@ -1,7 +1,6 @@
 package UI.filelist
 
 import Theme.primaryA1
-import Theme.primaryA3
 import Theme.surfaceA0
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

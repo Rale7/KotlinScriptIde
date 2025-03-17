@@ -27,8 +27,10 @@ class AppState {
         _folder.value = folder.value.copy(path = path)
 
         CoroutineScope(Dispatchers.IO).launch {
-            watchDirectory(path).flowOn(Dispatchers.Default).collect {
-                _files.value = it
+            watchDirectory(path).collect {
+                withContext(Dispatchers.Default) {
+                    _files.value = it
+                }
             }
         }
 
@@ -65,5 +67,6 @@ class AppState {
         }
 
     }
+        .flowOn(Dispatchers.IO)
 
 }
