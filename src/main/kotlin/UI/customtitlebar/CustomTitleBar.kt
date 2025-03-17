@@ -31,6 +31,7 @@ fun CustomTitleBar(
     ) {
         MyMenuBar(
             onOpenFolder = { viewModel.changeFolder() },
+            viewModel = viewModel,
             modifier = Modifier.fillMaxWidth()
         )
 

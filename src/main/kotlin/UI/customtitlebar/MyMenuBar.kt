@@ -19,13 +19,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import viewmodel.TitleBarViewModel
 
 @Composable
 fun MyMenuBar(
     onOpenFolder: () -> Unit,
+    viewModel: TitleBarViewModel,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsState()
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -42,15 +44,13 @@ fun MyMenuBar(
 
         Text(
             text = "File",
-            modifier = Modifier.clickable {
-                expanded = true
-            },
+            modifier = Modifier.clickable(onClick = viewModel::showFileMenu),
             color = Color.White,
         )
 
         DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
+            expanded = state.fileExpanded,
+            onDismissRequest = viewModel::hideFileMenu,
             modifier = Modifier.background(
                 color = surfaceA0,
                 shape = RectangleShape

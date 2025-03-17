@@ -21,11 +21,12 @@ dependencies {
     // (in a separate module for demo project and in testMain).
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
-    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.1")
+    implementation("br.com.devsrsouza.compose.icons:simple-icons:1.1.1")
     implementation("dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0")
     implementation("com.composables:icons-lucide:1.0.0")
     implementation("io.insert-koin:koin-core:3.4.3")
     implementation("io.insert-koin:koin-compose:1.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
 }
 
 compose.desktop {

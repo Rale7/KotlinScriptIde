@@ -21,6 +21,7 @@ import com.composables.icons.lucide.*
 @Composable
 fun FileListHeadline(
     folderPath: String,
+    onAddFile: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
 
@@ -38,7 +39,7 @@ fun FileListHeadline(
         )
 
         Button(
-            onClick = {},
+            onClick = onAddFile,
             shape = RectangleShape,
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
             elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
