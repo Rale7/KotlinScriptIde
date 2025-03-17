@@ -21,6 +21,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.input.pointer.PointerIcon
 import androidx.compose.ui.input.pointer.pointerHoverIcon
 import androidx.compose.ui.input.pointer.pointerInput
+import koin.appModule
+import org.koin.core.context.startKoin
 import java.awt.Cursor
 
 @Composable
@@ -89,16 +91,23 @@ fun App(
     }
 }
 
-fun main() = application {
-    val windowState = remember { WindowState() }
-    Window(
-        onCloseRequest = ::exitApplication,
-        undecorated = true,
-        state = windowState,
-    ) {
-        App(
-            windowState = windowState,
-            onClose = ::exitApplication
-        )
+fun main() {
+
+    startKoin {
+        modules(appModule)
+    }
+
+    application {
+        val windowState = remember { WindowState() }
+        Window(
+            onCloseRequest = ::exitApplication,
+            undecorated = true,
+            state = windowState,
+        ) {
+            App(
+                windowState = windowState,
+                onClose = ::exitApplication
+            )
+        }
     }
 }

@@ -20,6 +20,7 @@ import com.composables.icons.lucide.*
 
 @Composable
 fun FileListHeadline(
+    folderPath: String,
     modifier: Modifier = Modifier,
 ) {
 
@@ -29,7 +30,7 @@ fun FileListHeadline(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = "Trenutni folder",
+            text = folderPath,
             color = primaryA0,
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,

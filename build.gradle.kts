@@ -24,6 +24,8 @@ dependencies {
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.1")
     implementation("dev.chrisbanes.material3:material3-window-size-class-multiplatform:0.5.0")
     implementation("com.composables:icons-lucide:1.0.0")
+    implementation("io.insert-koin:koin-core:3.4.3")
+    implementation("io.insert-koin:koin-compose:1.0.1")
 }
 
 compose.desktop {
