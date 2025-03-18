@@ -23,6 +23,8 @@ class EditorPaneViewModel(private val tabsRepository: TabsRepository) {
         tabsRepository.changeText(newText)
     }
 
+    val focusRequester = tabsRepository.focusRequester
+
     fun closeTab(tab: FolderFile) {
         val index = tabs.value.indexOf(tab)
         tabsRepository.removeTabFile(tab)

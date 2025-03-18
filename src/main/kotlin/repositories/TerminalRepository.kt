@@ -71,11 +71,11 @@ class TerminalRepository {
             }
 
             launch {
-                errorStream?.charSequence()?.forEach {
+                errorStream?.lineSequence()?.forEach {
                     withContext(Dispatchers.Default) {
                         val newText = buildAnnotatedString {
                             append(output.value.annotatedString)
-                            pushStringAnnotation(tag = "ERROR", annotation = "error")
+                            pushStringAnnotation(tag = "ERROR", annotation = it)
                             withStyle(style = SpanStyle(
                                 color = hoverRed,
                                 textDecoration = TextDecoration.Underline
@@ -98,7 +98,7 @@ class TerminalRepository {
             withContext(Dispatchers.Default) {
                 val newText = buildAnnotatedString {
                     append(output.value.annotatedString)
-                    append("\nProcess finished with exit code $status")
+                    append("\n\nProcess finished with exit code $status")
                 }
                 _output.value = output.value.copy(
                      annotatedString = newText,

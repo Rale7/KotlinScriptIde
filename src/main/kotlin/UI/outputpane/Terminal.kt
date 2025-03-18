@@ -4,14 +4,15 @@ import Theme.primaryA0
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.VisualTransformation
@@ -27,6 +28,7 @@ import java.io.BufferedWriter
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Terminal(
     modifier: Modifier = Modifier,
@@ -34,6 +36,8 @@ fun Terminal(
 ) {
     val output by viewModel.output.collectAsState()
     val isRunning by viewModel.isRunning.collectAsState()
+
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
 
     BasicTextField(
         modifier = modifier
@@ -44,6 +48,14 @@ fun Terminal(
                         true
                     } else false
                 } else false
+            }.onPointerEvent(PointerEventType.Press) {pointerEvent ->
+                pointerEvent.changes.firstOrNull()?.let { change ->
+                    textLayoutResult?.let { layout ->
+                        val offset = layout.getOffsetForPosition(change.position)
+
+                        viewModel.errorPressed(offset)
+                    }
+                }
             },
         value = output,
         onValueChange = viewModel::userInput,
@@ -55,5 +67,6 @@ fun Terminal(
             textIndent = TextIndent.None,
         ),
         cursorBrush = SolidColor(Color.White),
+        onTextLayout = { textLayoutResult = it },
     )
 }

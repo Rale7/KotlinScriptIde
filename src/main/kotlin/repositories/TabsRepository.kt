@@ -1,5 +1,6 @@
 package repositories
 
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.text.input.TextFieldValue
 import data.FolderFile
 import data.SelectedFile
@@ -34,12 +35,12 @@ class TabsRepository {
         _tabFiles.value = emptyList()
     }
 
-    fun changeSelectedFile(folderFile: FolderFile) {
+    fun changeSelectedFile(folderFile: FolderFile) : Job? {
         _selectedFile.value = selectedFile.value.copy(fileName = folderFile.name, directory = folderFile.directory)
-        loadFileContent()
+        return loadFileContent()
     }
 
-    fun loadFileContent() {
+    fun loadFileContent() =
         if (selectedFile.value.fileName.isNotEmpty()) {
             CoroutineScope(Dispatchers.IO).launch {
                 val txt = File(selectedFile.value.directory, selectedFile.value.fileName).readText(Charsets.UTF_8)
@@ -48,8 +49,8 @@ class TabsRepository {
                     _selectedFile.value = selectedFile.value.copy(content = TextFieldValue(txt))
                 }
             }
-        }
-    }
+        } else null
+
 
     fun changeText(newText: TextFieldValue) {
         _selectedFile.value = selectedFile.value.copy(content = newText)
@@ -59,6 +60,8 @@ class TabsRepository {
     fun changeCursor(newCursor: TextFieldValue) {
         _selectedFile.value = selectedFile.value.copy(content = newCursor)
     }
+
+    val focusRequester = FocusRequester()
 
     /**
      *  To minimize IO operations, we will try to write to file when

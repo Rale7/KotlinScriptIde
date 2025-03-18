@@ -8,6 +8,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
@@ -32,6 +34,7 @@ fun CodingTextArea(
     changeText: (TextFieldValue) -> Unit,
     moveCursorDown: () -> Unit,
     moveCursorUp: () -> Unit,
+    focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
     val horizontalScrollState = rememberScrollState()
@@ -81,6 +84,7 @@ fun CodingTextArea(
                 value = selectedFile.content,
                 onValueChange = changeText,
                 modifier = Modifier.fillMaxSize()
+                    .focusRequester(focusRequester)
                     .padding(start = 10.dp)
                     .background(color = Color.Transparent)
                     .horizontalScroll(horizontalScrollState)
