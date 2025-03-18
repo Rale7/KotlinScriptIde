@@ -46,6 +46,8 @@ fun EditorPane(
             CodingTextArea(
                 selectedFile = selectedFile,
                 changeText = viewModel::changeText,
+                moveCursorDown = viewModel::moveCursorDown,
+                moveCursorUp = viewModel::moveCursorUp,
                 modifier = Modifier.fillMaxWidth()
             )
         }

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -29,6 +30,8 @@ import text.transformation.TabTransformation
 fun CodingTextArea(
     selectedFile: SelectedFile,
     changeText: (TextFieldValue) -> Unit,
+    moveCursorDown: () -> Unit,
+    moveCursorUp: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val horizontalScrollState = rememberScrollState()
@@ -81,7 +84,22 @@ fun CodingTextArea(
                     .padding(start = 10.dp)
                     .background(color = Color.Transparent)
                     .horizontalScroll(horizontalScrollState)
-                    .verticalScroll(verticalScrollState),
+                    .verticalScroll(verticalScrollState)
+                    .onPreviewKeyEvent { event ->
+                        if (event.type == KeyEventType.KeyDown) {
+                            when (event.key) {
+                                Key.DirectionUp -> {
+                                    moveCursorUp()
+                                    true
+                                }
+                                Key.DirectionDown -> {
+                                    moveCursorDown()
+                                    true
+                                }
+                                else -> false
+                            }
+                        } else false
+                    },
                 textStyle = TextStyle(
                     color = Color.White,
                     fontFamily = FontFamily.Monospace,

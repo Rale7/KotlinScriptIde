@@ -56,6 +56,9 @@ class TabsRepository {
         saveFile()
     }
 
+    fun changeCursor(newCursor: TextFieldValue) {
+        _selectedFile.value = selectedFile.value.copy(content = newCursor)
+    }
 
     /**
      *  To minimize IO operations, we will try to write to file when
