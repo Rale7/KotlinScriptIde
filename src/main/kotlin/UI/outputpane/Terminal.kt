@@ -1,9 +1,6 @@
 package UI.outputpane
 
-import Theme.primaryA0
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -15,18 +12,10 @@ import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import viewmodel.TerminalViewModel
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable

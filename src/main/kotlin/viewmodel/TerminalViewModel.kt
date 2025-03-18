@@ -1,7 +1,5 @@
 package viewmodel
 
-import androidx.compose.runtime.remember
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.CoroutineScope

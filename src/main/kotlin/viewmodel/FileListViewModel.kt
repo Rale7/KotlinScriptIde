@@ -12,7 +12,7 @@ import repositories.TabsRepository
 import java.io.File
 
 class FileListViewModel(
-    private val folderRepository: FolderRepository,
+    folderRepository: FolderRepository,
     private val tabsRepository: TabsRepository
 ) {
 

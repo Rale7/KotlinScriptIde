@@ -240,7 +240,7 @@ val AddIcon: ImageVector
 
 private var _AddIcon: ImageVector? = null
 
-public val DebugStart: ImageVector
+val DebugStart: ImageVector
     get() {
         if (_DebugStart != null) {
             return _DebugStart!!
@@ -283,7 +283,7 @@ public val DebugStart: ImageVector
 
 private var _DebugStart: ImageVector? = null
 
-public val DebugStop: ImageVector
+val DebugStop: ImageVector
     get() {
         if (_DebugStop != null) {
             return _DebugStop!!

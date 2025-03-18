@@ -3,10 +3,6 @@ package viewmodel
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import data.FolderFile
-import data.SelectedFile
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import org.koin.core.module._factoryInstanceFactory
 import repositories.TabsRepository
 import kotlin.math.min
 
