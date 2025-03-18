@@ -1,5 +1,6 @@
 package UI.outputpane
 
+import Theme.primaryA0
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
