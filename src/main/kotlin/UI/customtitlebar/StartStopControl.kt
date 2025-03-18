@@ -10,6 +10,8 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -20,8 +22,9 @@ import viewmodel.TerminalViewModel
 fun StartStopControl(
     viewModel: TerminalViewModel = koinInject()
 ) {
+    val isRunning by viewModel.isRunning.collectAsState(initial = false)
 
-    if (!viewModel.isRunning) {
+    if (!isRunning) {
         Button(
             onClick = viewModel::runSelectedFile,
             colors = ButtonDefaults.buttonColors(
@@ -38,7 +41,7 @@ fun StartStopControl(
         }
     } else {
         Button(
-            onClick = {},
+            onClick = viewModel::endProcess,
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Transparent,
             ),

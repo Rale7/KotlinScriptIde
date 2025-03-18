@@ -9,8 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.CoroutineScope
@@ -26,15 +29,24 @@ import java.io.OutputStreamWriter
 @Composable
 fun Terminal(
     modifier: Modifier = Modifier,
-    terminalViewModel: TerminalViewModel = koinInject()
+    viewModel: TerminalViewModel = koinInject()
 ) {
-    val output by terminalViewModel.output.collectAsState()
+    val output by viewModel.output.collectAsState()
+    val isRunning by viewModel.isRunning.collectAsState()
 
     BasicTextField(
-        modifier = modifier,
+        modifier = modifier
+            .onPreviewKeyEvent { keyEvent ->
+                if (keyEvent.type == KeyEventType.KeyDown) {
+                    if (keyEvent.key == Key.Enter) {
+                        viewModel.enterPressed()
+                        true
+                    } else false
+                } else false
+            },
         value = output,
-        onValueChange = {},
-        readOnly = true,
+        onValueChange = viewModel::userInput,
+        readOnly = !isRunning,
         textStyle = TextStyle(
             color = Color.White,
             fontFamily = FontFamily.Monospace,
@@ -43,7 +55,4 @@ fun Terminal(
         ),
         cursorBrush = SolidColor(Color.White),
     )
-
-
-
 }
