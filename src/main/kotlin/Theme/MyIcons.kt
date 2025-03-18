@@ -240,6 +240,97 @@ val AddIcon: ImageVector
 
 private var _AddIcon: ImageVector? = null
 
+public val DebugStart: ImageVector
+    get() {
+        if (_DebugStart != null) {
+            return _DebugStart!!
+        }
+        _DebugStart = ImageVector.Builder(
+            name = "DebugStart",
+            defaultWidth = 16.dp,
+            defaultHeight = 16.dp,
+            viewportWidth = 16f,
+            viewportHeight = 16f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.EvenOdd
+            ) {
+                moveTo(4.25f, 3f)
+                lineToRelative(1.166f, -0.624f)
+                lineToRelative(8f, 5.333f)
+                verticalLineToRelative(1.248f)
+                lineToRelative(-8f, 5.334f)
+                lineToRelative(-1.166f, -0.624f)
+                verticalLineTo(3f)
+                close()
+                moveToRelative(1.5f, 1.401f)
+                verticalLineToRelative(7.864f)
+                lineToRelative(5.898f, -3.932f)
+                lineTo(5.75f, 4.401f)
+                close()
+            }
+        }.build()
+        return _DebugStart!!
+    }
+
+private var _DebugStart: ImageVector? = null
+
+public val DebugStop: ImageVector
+    get() {
+        if (_DebugStop != null) {
+            return _DebugStop!!
+        }
+        _DebugStop = ImageVector.Builder(
+            name = "DebugStop",
+            defaultWidth = 16.dp,
+            defaultHeight = 16.dp,
+            viewportWidth = 16f,
+            viewportHeight = 16f
+        ).apply {
+            path(
+                fill = SolidColor(Color(0xFF000000)),
+                fillAlpha = 1.0f,
+                stroke = null,
+                strokeAlpha = 1.0f,
+                strokeLineWidth = 1.0f,
+                strokeLineCap = StrokeCap.Butt,
+                strokeLineJoin = StrokeJoin.Miter,
+                strokeLineMiter = 1.0f,
+                pathFillType = PathFillType.EvenOdd
+            ) {
+                moveTo(13f, 1.99976f)
+                lineTo(14f, 2.99976f)
+                verticalLineTo(12.9998f)
+                lineTo(13f, 13.9998f)
+                horizontalLineTo(3f)
+                lineTo(2f, 12.9998f)
+                lineTo(2f, 2.99976f)
+                lineTo(3f, 1.99976f)
+                horizontalLineTo(13f)
+                close()
+                moveTo(12.7461f, 3.25057f)
+                lineTo(3.25469f, 3.25057f)
+                lineTo(3.25469f, 12.7504f)
+                horizontalLineTo(12.7461f)
+                verticalLineTo(3.25057f)
+                close()
+            }
+        }.build()
+        return _DebugStop!!
+    }
+
+private var _DebugStop: ImageVector? = null
+
+
+
 
 
 

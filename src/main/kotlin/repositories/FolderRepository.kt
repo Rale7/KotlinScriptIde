@@ -48,7 +48,7 @@ class FolderRepository {
         emit(
             File(path).listFiles()
                 ?.toList()
-                ?.filter { it.isFile && (it.name.endsWith("kts") || it.name.endsWith("kt")) }
+                ?.filter { it.isFile && it.name.endsWith("kts") }
                 ?.mapNotNull { FolderFile(name = it.name, directory = path) } ?: emptyList())
 
         while (true) {
@@ -56,7 +56,7 @@ class FolderRepository {
             emit(
                 File(path).listFiles()
                     ?.toList()
-                    ?.filter { it.isFile && (it.name.endsWith("kts") || it.name.endsWith("kt")) }
+                    ?.filter { it.isFile && it.name.endsWith("kts") }
                     ?.mapNotNull { FolderFile(name = it.name, directory = path) } ?: emptyList())
 
             key.pollEvents()

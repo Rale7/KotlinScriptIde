@@ -42,7 +42,7 @@ class FileListViewModel(
 
     fun createNewFile() {
         CoroutineScope(Dispatchers.IO).launch {
-            if (!File(path.value.path, "${_state.value.newFileName}.kt").createNewFile()) {
+            if (!File(path.value.path, "${_state.value.newFileName}.kts").createNewFile()) {
                 withContext(Dispatchers.Default) {
                     _state.value = state.value.copy(isError = true)
                 }
