@@ -1,10 +1,15 @@
 package viewmodel
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import repositories.TabsRepository
 import repositories.TerminalRepository
@@ -13,6 +18,25 @@ class TerminalViewModel(
     private val terminalRepository: TerminalRepository,
     private val tabsRepository: TabsRepository
 ) {
+
+    data class TerminalState(
+        val textLayoutResult: TextLayoutResult? = null,
+        val isHovered: Boolean = false,
+    )
+
+    private val _terminalState = MutableStateFlow(TerminalState())
+    val terminalState = _terminalState.asStateFlow()
+
+    fun changeTextLayout(textLayoutResult: TextLayoutResult) {
+        _terminalState.value = terminalState.value.copy(textLayoutResult = textLayoutResult)
+    }
+
+    fun changeHoverState(offset: Int) {
+        _terminalState.value = terminalState.value.copy(isHovered = output.value.annotatedString
+            .getStringAnnotations("ERROR", offset, offset)
+            .isNotEmpty()
+        )
+    }
 
     val output = terminalRepository.output
 
@@ -31,6 +55,8 @@ class TerminalViewModel(
     fun enterPressed() = terminalRepository.writeUserInput()
 
     fun errorPressed(offset: Int) {
+        if (terminalRepository.runningFile.value.name.isEmpty()) return
+
         CoroutineScope(Dispatchers.IO).launch {
             if (tabsRepository.selectedFile.value.fileName.isEmpty()
                 || tabsRepository.selectedFile.value.fileName != terminalRepository.runningFile.value.name
@@ -39,40 +65,35 @@ class TerminalViewModel(
                 tabsRepository.changeSelectedFile(terminalRepository.runningFile.value)?.join()
             }
 
-            val annotations = terminalRepository.output.value.annotatedString.getStringAnnotations(
+            terminalRepository.output.value.annotatedString.getStringAnnotations(
                 tag = "ERROR",
-                start = 0,
-                end = terminalRepository.output.value.annotatedString.length,
-            )
-            annotations.firstOrNull { annotation ->
-                offset in annotation.start..annotation.end
-            }?.item?.let {
+                start = offset,
+                end = offset,
+            ).firstOrNull()?.item?.let {
                 focusCodingArea(it)
             }
         }
 
     }
 
-    private val regex = Regex("""(?<=\.kts:)(\d+):(\d+)""")
-
     private fun focusCodingArea(errorMessage: String) {
 
-        regex.find(errorMessage)?.let {
-            val (line, column) = it.destructured
-            val lines = tabsRepository.selectedFile.value.content.text.split('\n')
-            var position = 0
+        val line = errorMessage.split(':')[0]
+        val column = errorMessage.split(':')[1]
+        val lines = tabsRepository.selectedFile.value.content.text.split('\n')
+        var position = 0
 
-            for (i in 0..line.toInt() - 2) {
-                position += lines[i].length
-            }
+        for (i in 0..line.toInt() - 2) {
+            position += lines[i].length
+        }
 
-            position += column.toInt()
+        position += column.toInt()
 
-            CoroutineScope(Dispatchers.Default).launch {
-                tabsRepository.changeCursor(tabsRepository.selectedFile.value.content.copy(selection = TextRange(position)))
-                delay(200)
-                tabsRepository.focusRequester.requestFocus()
-            }
+        CoroutineScope(Dispatchers.Default).launch {
+            tabsRepository.changeCursor(tabsRepository.selectedFile.value.content.copy(selection = TextRange(position)))
+            delay(200)
+            tabsRepository.focusRequester.requestFocus()
         }
     }
+
 }

@@ -20,7 +20,7 @@ fun OutputHeadline(
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start,
-        modifier = modifier.padding(start = 15.dp),
+        modifier = modifier.padding(start = 10.dp),
     ) {
         Text(
             text = "Output",

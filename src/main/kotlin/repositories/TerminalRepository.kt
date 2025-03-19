@@ -71,7 +71,8 @@ class TerminalRepository {
                     withContext(Dispatchers.Default) {
                         val newText = buildAnnotatedString {
                             append(output.value.annotatedString)
-                            pushStringAnnotation(tag = "ERROR", annotation = it)
+                            findMatch(it)
+                            pushStringAnnotation(tag = "ERROR", annotation = message)
                             withStyle(style = SpanStyle(
                                 color = hoverRed,
                                 textDecoration = TextDecoration.Underline
@@ -79,6 +80,7 @@ class TerminalRepository {
                                 append(it)
                             }
                             pop()
+                            append('\n')
                         }
                         lastValidCursorPosition = newText.length
 
@@ -102,6 +104,16 @@ class TerminalRepository {
                 _isRunning.value = false
             }
         }
+    }
+
+    private val regex = Regex("""(?<=\.kts:)(\d+):(\d+)""")
+    private var message = ""
+
+    fun findMatch(currentMessage: String) {
+        message = regex.find(currentMessage)?.let {
+            val (line, column) = it.destructured
+            "$line:$column"
+        } ?: message
     }
 
     fun endProcess() {
