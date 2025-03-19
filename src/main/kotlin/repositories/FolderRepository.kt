@@ -1,5 +1,6 @@
 package repositories
 
+import data.Config
 import data.Folder
 import data.FolderFile
 import kotlinx.coroutines.CoroutineScope
@@ -7,12 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import java.io.File
 import java.nio.file.FileSystems
 import java.nio.file.Paths
 import java.nio.file.StandardWatchEventKinds
 
-class FolderRepository {
+class FolderRepository(
+    private val configRepository: ConfigRepository
+) {
 
     private val _folder = MutableStateFlow(Folder())
     val folder = _folder.asStateFlow()
@@ -20,10 +24,17 @@ class FolderRepository {
     private val _files = MutableStateFlow(listOf<FolderFile>())
     val files = _files.asStateFlow()
 
+    init {
+        changeFolder(configRepository.loadConfig().currentDirectory)
+    }
+
     fun changeFolder(path: String) {
         _folder.value = folder.value.copy(path = path)
 
         CoroutineScope(Dispatchers.IO).launch {
+            val config = configRepository.loadConfig().copy(currentDirectory = path)
+            configRepository.saveConfig(config)
+
             watchDirectory(path).collect {
                 withContext(Dispatchers.Default) {
                     _files.value = it

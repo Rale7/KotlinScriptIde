@@ -1,6 +1,7 @@
 package koin
 
 import org.koin.dsl.module
+import repositories.ConfigRepository
 import repositories.FolderRepository
 import repositories.TabsRepository
 import repositories.TerminalRepository
@@ -10,7 +11,8 @@ import viewmodel.TerminalViewModel
 import viewmodel.TitleBarViewModel
 
 val appModule = module {
-    single { FolderRepository() }
+    single { ConfigRepository() }
+    single { FolderRepository(get()) }
     single { TabsRepository() }
     single { TerminalRepository() }
 
