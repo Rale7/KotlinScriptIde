@@ -17,6 +17,8 @@ class TerminalViewModel(
     private val tabsRepository: TabsRepository
 ) {
 
+    val file = tabsRepository.selectedFile
+
     data class TerminalState(
         val textLayoutResult: TextLayoutResult? = null,
         val isHovered: Boolean = false,

@@ -54,7 +54,7 @@ fun MyMenuBar(
                 expanded = state.fileExpanded,
                 onDismissRequest = viewModel::hideFileMenu,
                 modifier = Modifier.background(
-                    color = primaryA0,
+                    color = surfaceA0,
                     shape = RoundedCornerShape(0.dp)
                 ).padding(0.dp),
 
