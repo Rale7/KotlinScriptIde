@@ -49,6 +49,7 @@ fun StartStopControl(
                 backgroundColor = Color.Transparent,
             ),
             elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
+            modifier = Modifier.pointerHoverIcon(PointerIcon.Hand),
         ) {
             Icon(
                 imageVector = DebugStop,
