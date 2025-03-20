@@ -31,9 +31,6 @@ class TerminalRepository {
 
     private fun isWindows() = System.getProperty("os.name").lowercase().contains("windows")
 
-    private val shell = if (isWindows()) "cmd" else "sh"
-    private val arg = if (isWindows()) "/c" else "-c"
-
     var lastValidCursorPosition = 0
 
     private var process : Process? = null
@@ -48,7 +45,11 @@ class TerminalRepository {
         _isRunning.value = true
 
         CoroutineScope(Dispatchers.IO).launch {
-            process = ProcessBuilder(shell, arg, "kotlinc", "-script", fullPath).start()
+            process = if (isWindows()) {
+                ProcessBuilder("cmd", "/c", "kotlinc", "-script", fullPath).start()
+            } else {
+                ProcessBuilder("kotlinc", "-script", fullPath).start()
+            }
             val inputStream = process?.let { BufferedReader(InputStreamReader(it.inputStream)) }
             val errorStream = process?.let { BufferedReader(InputStreamReader(it.errorStream)) }
             outputStream = process?.outputStream?.let { OutputStreamWriter(it) }?.let { BufferedWriter(it) }
