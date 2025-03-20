@@ -2,6 +2,7 @@ package UI.editorpane
 
 import Theme.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
@@ -40,16 +41,37 @@ fun CodingTextArea(
     val verticalScrollState = rememberScrollState()
 
     var boxHeight by remember { mutableStateOf(0) }
+    var boxWidth by remember { mutableStateOf(0) }
 
     Box(
         modifier = modifier.onGloballyPositioned {
             boxHeight = it.size.height
+            boxWidth = it.size.width
         }
     ) {
         val numberOfLines = selectedFile.content.text.lines().size
-        val currentLine = selectedFile.content.text.substring(0, selectedFile.content.selection.start).count { it == '\n' }
+        val currentSubstr = selectedFile.content.text.substring(0, selectedFile.content.selection.start)
+        val currentLine = currentSubstr.count { it == '\n' }
+        val cursorHorizontal = selectedFile.content.selection.start - currentSubstr.lastIndexOf('\n').let {
+            if (it == -1) 0 else it
+        }
         val lineHeight = with(LocalDensity.current) {
             (15.sp.toPx() * 1.2f).toDp()
+        }
+
+        val characterWidth = with(LocalDensity.current) {
+            (15.sp.toPx() * 0.6f).toDp()
+        }
+
+        LaunchedEffect(cursorHorizontal) {
+
+            if (cursorHorizontal <= horizontalScrollState.value / characterWidth.value) {
+                horizontalScrollState.animateScrollBy(-characterWidth.value)
+            }
+
+            if (cursorHorizontal > (horizontalScrollState.value + boxWidth - characterWidth.value) / characterWidth.value) {
+                horizontalScrollState.animateScrollBy(characterWidth.value)
+            }
         }
 
         LaunchedEffect(currentLine) {
