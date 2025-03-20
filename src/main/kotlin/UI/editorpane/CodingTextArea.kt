@@ -2,6 +2,7 @@ package UI.editorpane
 
 import Theme.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
@@ -14,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -37,8 +39,12 @@ fun CodingTextArea(
     val horizontalScrollState = rememberScrollState()
     val verticalScrollState = rememberScrollState()
 
+    var boxHeight by remember { mutableStateOf(0) }
+
     Box(
-        modifier = modifier
+        modifier = modifier.onGloballyPositioned {
+            boxHeight = it.size.height
+        }
     ) {
         val numberOfLines = selectedFile.content.text.lines().size
         val currentLine = selectedFile.content.text.substring(0, selectedFile.content.selection.start).count { it == '\n' }
@@ -46,14 +52,28 @@ fun CodingTextArea(
             (15.sp.toPx() * 1.2f).toDp()
         }
 
-        Box(
-            modifier = Modifier.fillMaxWidth()
-                .offset(y = lineHeight * currentLine)
-                .height(lineHeight)
-                .background(
-                    color = tonalA3.copy(alpha = 0.5f)
-                )
-        )
+        LaunchedEffect(currentLine) {
+            if (currentLine < verticalScrollState.value / lineHeight.value) {
+                verticalScrollState.scrollBy(-lineHeight.value)
+            }
+
+            if (currentLine > (verticalScrollState.value + boxHeight - lineHeight.value) / lineHeight.value) {
+                verticalScrollState.scrollBy(lineHeight.value)
+            }
+        }
+
+        val highlightTextOffset = lineHeight * currentLine - verticalScrollState.value.dp
+
+        if (highlightTextOffset >= -lineHeight) {
+            Box(
+                modifier = Modifier.fillMaxWidth()
+                    .offset(y = if (highlightTextOffset >= 0.dp) highlightTextOffset else 0.dp)
+                    .height(if (highlightTextOffset >= 0.dp) lineHeight else lineHeight + highlightTextOffset)
+                    .background(
+                        color = tonalA3.copy(alpha = 0.5f)
+                    )
+            )
+        }
 
         Row {
             Column(
