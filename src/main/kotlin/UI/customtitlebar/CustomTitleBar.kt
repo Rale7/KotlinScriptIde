@@ -1,15 +1,12 @@
 package UI.customtitlebar
 
-import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.*
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.WindowState
@@ -23,6 +20,8 @@ fun CustomTitleBar(
     modifier: Modifier = Modifier,
     viewModel: TitleBarViewModel = koinInject()
 ) {
+
+    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = modifier.pointerInput(Unit) {
@@ -53,6 +52,9 @@ fun CustomTitleBar(
 
         CustomTitleControls(
             windowState = windowState,
+            isMaximized = state.isMaximized,
+            onRestore = viewModel::restoreWindow,
+            onMaximize = viewModel::maximizeWindow,
             onExit = onExit,
         )
     }
