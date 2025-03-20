@@ -84,7 +84,7 @@ class TerminalViewModel(
         var position = 0
 
         for (i in 0..line.toInt() - 2) {
-            position += lines[i].length
+            position += lines[i].length + 1
         }
 
         position += column.toInt()
