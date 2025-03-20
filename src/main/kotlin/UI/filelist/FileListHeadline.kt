@@ -39,7 +39,7 @@ fun FileListHeadline(
             onClick = onAddFile,
             shape = RectangleShape,
             colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+            elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp)
         ) {
             Icon(
                 imageVector = AddIcon,
