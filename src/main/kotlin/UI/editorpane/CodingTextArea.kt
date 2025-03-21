@@ -13,14 +13,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
@@ -38,7 +41,7 @@ fun CodingTextArea(
     changeText: (TextFieldValue) -> Unit,
     moveCursorDown: () -> Unit,
     moveCursorUp: () -> Unit,
-    onTextAreaPressed: () -> Unit,
+    onTextAreaPressed: (Int) -> Unit,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
@@ -47,6 +50,8 @@ fun CodingTextArea(
 
     var boxHeight by remember { mutableStateOf(0) }
     var boxWidth by remember { mutableStateOf(0) }
+
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
 
     Box(
         modifier = modifier.onGloballyPositioned {
@@ -147,10 +152,10 @@ fun CodingTextArea(
                                 else -> false
                             }
                         } else false
-                    }.onPointerEvent(PointerEventType.Press) {event ->
-                        onTextAreaPressed()
-                    }.onPointerEvent(PointerEventType.Release) {event ->
-                        onTextAreaPressed()
+                    }.onPointerEvent(PointerEventType.Release) { pointerEvent ->
+                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
+                    }.onPointerEvent(PointerEventType.Press) { pointerEvent ->
+                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
                     },
                 textStyle = TextStyle(
                     color = Color.White,
@@ -159,7 +164,8 @@ fun CodingTextArea(
                     textIndent = TextIndent.None,
                 ),
                 cursorBrush = SolidColor(Color.White),
-                visualTransformation = CombinedTransformation()
+                visualTransformation = CombinedTransformation(),
+                onTextLayout = {textLayoutResult = it}
             )
         }
 
@@ -195,5 +201,23 @@ fun CodingTextArea(
             )
         )
     }
+}
 
+fun onPressTextArea(
+    pointerEvent: PointerEvent,
+    textLayoutResult: TextLayoutResult?,
+    horizontalScrollState: ScrollState,
+    verticalScrollState: ScrollState,
+    onTextAreaPressed: (Int) -> Unit
+) {
+    pointerEvent.changes.firstOrNull()?.let { change ->
+        textLayoutResult?.let { layout ->
+            val adjustedPosition = Offset(
+                x = change.position.x + horizontalScrollState.value,
+                y = change.position.y + verticalScrollState.value
+            )
+            val offset = layout.getOffsetForPosition(adjustedPosition)
+            onTextAreaPressed(offset)
+        }
+    }
 }
