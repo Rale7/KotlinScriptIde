@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -16,6 +17,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
@@ -28,12 +31,14 @@ import androidx.compose.ui.unit.sp
 import data.SelectedFile
 import text.transformation.CombinedTransformation
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CodingTextArea(
     selectedFile: SelectedFile,
     changeText: (TextFieldValue) -> Unit,
     moveCursorDown: () -> Unit,
     moveCursorUp: () -> Unit,
+    onTextAreaPressed: () -> Unit,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
@@ -142,6 +147,10 @@ fun CodingTextArea(
                                 else -> false
                             }
                         } else false
+                    }.onPointerEvent(PointerEventType.Press) {event ->
+                        onTextAreaPressed()
+                    }.onPointerEvent(PointerEventType.Release) {event ->
+                        onTextAreaPressed()
                     },
                 textStyle = TextStyle(
                     color = Color.White,

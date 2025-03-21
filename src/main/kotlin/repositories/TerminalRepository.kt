@@ -152,13 +152,11 @@ class TerminalRepository {
         } else {
             _output.value = output.value.copy(
                 annotatedString = buildAnnotatedString {
-                    if (output.value.text.length < text.text.length) {
-                        append(output.value.annotatedString)
+                    if (output.value.text.length != text.text.length) {
+                        append(output.value.annotatedString.take(lastValidCursorPosition))
                         withStyle(style = SpanStyle(color = primaryA0)) {
-                            append(text.text.drop(output.value.text.length))
+                            append(text.text.takeLast(text.text.length - lastValidCursorPosition))
                         }
-                    } else if (output.value.text.length > text.text.length) {
-                        append(output.value.annotatedString.dropLast(1))
                     } else {
                         append(output.value.annotatedString)
                     }

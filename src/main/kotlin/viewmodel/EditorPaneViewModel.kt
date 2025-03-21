@@ -70,4 +70,10 @@ class EditorPaneViewModel(private val tabsRepository: TabsRepository) {
         }
     }
 
+    fun onTextAreaPress() {
+        tabsRepository.changeCursor(selectedFile.value.content.copy(
+            selection = TextRange(selectedFile.value.content.selection.start - selectedFile.value.content.text.count { it == '\t'} * 3)
+        ))
+    }
+
 }

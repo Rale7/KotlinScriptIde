@@ -61,7 +61,7 @@ class TerminalViewModel(
             if (tabsRepository.selectedFile.value.fileName.isEmpty()
                 || tabsRepository.selectedFile.value.fileName != terminalRepository.runningFile.value.name
             ) {
-
+                tabsRepository.addTabFile(terminalRepository.runningFile.value)
                 tabsRepository.changeSelectedFile(terminalRepository.runningFile.value)?.join()
             }
 
