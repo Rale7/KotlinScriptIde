@@ -3,7 +3,7 @@ package test
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.test.junit4.createComposeRule
-import com.kotlin.script.ide.koin.appModule
+import com.kotlin.script.ide.UI.koin.testModule
 import org.junit.Rule
 import org.koin.compose.LocalKoinApplication
 import org.koin.compose.LocalKoinScope
@@ -16,7 +16,7 @@ open class BaseComposeTest : KoinComponent {
 
     @get:Rule
     val koinTestRule = KoinTestRule.create {
-        modules(appModule)
+        modules(testModule)
     }
 
     @get:Rule

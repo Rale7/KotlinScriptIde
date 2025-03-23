@@ -8,21 +8,21 @@ import kotlin.test.Test
 
 class MyMenuBarKtTest : BaseComposeTest() {
 
-  @Test
-  fun testOpenFolder() {
-   val windowState = WindowState()
+    @Test
+    fun testOpenFolder() {
+        val windowState = WindowState()
 
-   super.setContent {
-    CustomTitleBar(
-     windowState = windowState,
-     onExit = {},
-    )
-   }
+        super.setContent {
+            CustomTitleBar(
+                windowState = windowState,
+                onExit = {},
+            )
+        }
 
-   composeTestRule.onNodeWithText("File").performClick()
+        composeTestRule.onNodeWithText("File").performClick()
 
-   composeTestRule.onNodeWithText("Open Folder").assertExists()
+        composeTestRule.onNodeWithText("Open Folder").assertExists()
 
-  }
+    }
 
 }

@@ -43,7 +43,7 @@ fun FileListHeadline(
         ) {
             Icon(
                 imageVector = AddIcon,
-                contentDescription = null,
+                contentDescription = "Add file",
                 tint = Color.White,
             )
         }

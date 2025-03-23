@@ -11,50 +11,50 @@ import kotlin.test.Test
 
 
 class CustomTitleControlsKtTest : BaseComposeTest() {
- private val windowBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().maximumWindowBounds
+    private val windowBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().maximumWindowBounds
 
- @Test
- fun maximizeWindowTest() {
-  val windowState = WindowState()
+    @Test
+    fun maximizeWindowTest() {
+        val windowState = WindowState()
 
-  super.setContent {
-   CustomTitleBar(
-    windowState = windowState,
-    onExit = {},
-   )
-  }
+        super.setContent {
+            CustomTitleBar(
+                windowState = windowState,
+                onExit = {},
+            )
+        }
 
-  val oldSize = windowState.size
-  val oldPosition = windowState.position
+        val oldSize = windowState.size
+        val oldPosition = windowState.position
 
-  composeTestRule.onNodeWithContentDescription("Maximize").performClick()
+        composeTestRule.onNodeWithContentDescription("Maximize").performClick()
 
-  assertEquals(windowState.position.x.value, 0f)
-  assertEquals(windowState.position.y.value, 0f)
-  assertEquals(windowState.size.width, windowBounds.width.dp)
-  assertEquals(windowState.size.height, windowBounds.height.dp)
+        assertEquals(windowState.position.x.value, 0f)
+        assertEquals(windowState.position.y.value, 0f)
+        assertEquals(windowState.size.width, windowBounds.width.dp)
+        assertEquals(windowState.size.height, windowBounds.height.dp)
 
-  composeTestRule.onNodeWithContentDescription("Maximize").performClick()
+        composeTestRule.onNodeWithContentDescription("Maximize").performClick()
 
-  assertEquals(oldSize, windowState.size)
-  assertEquals(oldPosition, windowState.position)
- }
+        assertEquals(oldSize, windowState.size)
+        assertEquals(oldPosition, windowState.position)
+    }
 
- @Test
- fun minimizeWindowTest() {
+    @Test
+    fun minimizeWindowTest() {
 
-  val windowState = WindowState()
+        val windowState = WindowState()
 
-  super.setContent {
-   CustomTitleBar(
-    windowState = windowState,
-    onExit = {},
-   )
-  }
+        super.setContent {
+            CustomTitleBar(
+                windowState = windowState,
+                onExit = {},
+            )
+        }
 
-  composeTestRule.onNodeWithContentDescription("Minimize").performClick()
+        composeTestRule.onNodeWithContentDescription("Minimize").performClick()
 
-  assertEquals(windowState.isMinimized, true)
+        assertEquals(windowState.isMinimized, true)
 
- }
+    }
 }
