@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,8 +53,9 @@ fun NewFileDialog(
                 OutlinedTextField(
                     value = state.value.newFileName,
                     onValueChange = {viewModel.changeFileName(newFileName = it)},
-                    label = { Text(if (state.value.isError) "File already exists" else "File name") },
-                    modifier = Modifier.fillMaxWidth().padding(20.dp),
+                    label = { Text(state.value.newFileLabel) },
+                    modifier = Modifier.fillMaxWidth().padding(20.dp)
+                        .semantics { contentDescription = "new_file_input_text" },
                     singleLine = true,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = Color.White,
@@ -93,8 +96,10 @@ fun NewFileDialog(
 fun DialogButton(
     onClick: () -> Unit,
     text: String,
+    modifier: Modifier = Modifier
 ) {
     Button(
+        modifier = modifier,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             backgroundColor = primaryA1,

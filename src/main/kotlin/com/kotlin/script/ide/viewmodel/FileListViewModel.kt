@@ -20,6 +20,7 @@ class FileListViewModel(
         val showDialog: Boolean = false,
         val newFileName: String = "",
         val isError: Boolean = false,
+        val newFileLabel: String = "New file"
     )
 
     private val _state = MutableStateFlow(FileListState())
@@ -29,7 +30,12 @@ class FileListViewModel(
     val files = folderRepository.files
 
     fun showDialog() {
-        _state.value = state.value.copy(showDialog = true)
+        _state.value = state.value.copy(
+            showDialog = true,
+            isError = false,
+            newFileLabel = "New file",
+            newFileName = "",
+        )
     }
 
     fun hideDialog() {
@@ -37,14 +43,37 @@ class FileListViewModel(
     }
 
     fun changeFileName(newFileName: String) {
-        _state.value = state.value.copy(newFileName = newFileName)
+        if (newFileName.length > 50) {
+            _state.value = state.value.copy(
+                isError = true,
+                newFileLabel = "File name too long"
+            )
+        } else {
+            _state.value = state.value.copy(
+                newFileName = newFileName,
+                isError = false,
+                newFileLabel = "New file"
+            )
+        }
     }
 
     fun createNewFile() {
+        if (state.value.newFileName.isEmpty()) {
+            _state.value = state.value.copy(
+                isError = true,
+                newFileLabel = "File name cannot be empty"
+            )
+
+            return
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
             if (!File(path.value.path, "${_state.value.newFileName}.kts").createNewFile()) {
                 withContext(Dispatchers.Default) {
-                    _state.value = state.value.copy(isError = true)
+                    _state.value = state.value.copy(
+                        isError = true,
+                        newFileLabel = "File already exists"
+                    )
                 }
             } else {
                 withContext(Dispatchers.Default) {
