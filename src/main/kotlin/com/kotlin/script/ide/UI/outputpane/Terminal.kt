@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.key.*
 import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextIndent
@@ -78,7 +80,8 @@ fun Terminal(
                         }
                     }
                 }.horizontalScroll(horizontalScrollState)
-                .verticalScroll(verticalScrollState),
+                .verticalScroll(verticalScrollState)
+                .semantics { contentDescription = "terminal" },
             value = output,
             onValueChange = viewModel::userInput,
             readOnly = !isRunning,
