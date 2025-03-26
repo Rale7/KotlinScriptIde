@@ -8,6 +8,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.io.File
+import java.io.IOException
 
 class TabsRepository {
 
@@ -68,13 +69,21 @@ class TabsRepository {
      *  user stops typing, also bufferedWriter is used for less disk
      *  operatons
      */
-    fun saveFile() {
+    private fun saveFile() {
         saveJob?.cancel()
 
         saveJob = CoroutineScope(Dispatchers.IO).launch {
             delay(500)
-            File(selectedFile.value.directory, selectedFile.value.fileName).bufferedWriter().use {
-                it.write(selectedFile.value.content.text)
+            try {
+                File(selectedFile.value.directory, selectedFile.value.fileName).bufferedWriter().use {
+                    it.write(selectedFile.value.content.text)
+                }
+            } catch (e: IOException) {
+                removeTabFile(FolderFile(
+                    directory =  selectedFile.value.directory,
+                    name = selectedFile.value.fileName
+                ))
+                _selectedFile.value = SelectedFile()
             }
         }
     }

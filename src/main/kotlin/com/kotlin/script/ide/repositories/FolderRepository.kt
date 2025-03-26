@@ -27,9 +27,12 @@ class FolderRepository(
     }
 
     fun changeFolder(path: String) {
+        if (!File(path).isDirectory) return
+
         _folder.value = folder.value.copy(path = path)
 
         CoroutineScope(Dispatchers.IO).launch {
+
             val config = configRepository.loadConfig().copy(currentDirectory = path)
             configRepository.saveConfig(config)
 
@@ -57,7 +60,7 @@ class FolderRepository(
         emit(
             File(path).listFiles()
                 ?.toList()
-                ?.filter { it.isFile && it.name.endsWith("kts") }
+                ?.filter { it.isFile && it.name.endsWith(".kts") }
                 ?.mapNotNull { FolderFile(name = it.name, directory = path) } ?: emptyList())
 
         while (true) {

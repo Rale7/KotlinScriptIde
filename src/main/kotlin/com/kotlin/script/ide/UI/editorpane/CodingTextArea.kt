@@ -22,6 +22,8 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -116,7 +118,8 @@ fun CodingTextArea(
                     .width(40.dp)
                     .padding(start = 10.dp)
                     .background(color = Color.Transparent)
-                    .verticalScroll(verticalScrollState),
+                    .verticalScroll(verticalScrollState)
+                    .semantics { contentDescription = "numOfLines" },
             ) {
 
                 repeat(numberOfLines) {
@@ -159,7 +162,7 @@ fun CodingTextArea(
                         onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
                     }.onPointerEvent(PointerEventType.Press) { pointerEvent ->
                         onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
-                    },
+                    }.semantics { contentDescription = "codingTextArea" },
                 textStyle = TextStyle(
                     color = Color.White,
                     fontFamily = FontFamily.Monospace,
