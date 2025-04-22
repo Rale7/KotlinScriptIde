@@ -4,6 +4,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.kotlin.script.ide.data.FolderFile
 import com.kotlin.script.ide.repositories.TabsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlin.math.min
 
 class EditorPaneViewModel(private val tabsRepository: TabsRepository) {
@@ -70,13 +71,54 @@ class EditorPaneViewModel(private val tabsRepository: TabsRepository) {
         }
     }
 
+    data class TextAreaState(
+        val pressed: Boolean = false,
+        val previousCursor: Int = 0
+    )
+
+    private val _state = MutableStateFlow(TextAreaState())
+
     fun onTextAreaPress(offset: Int) {
-        tabsRepository.changeCursor(selectedFile.value.content.run { copy(
+        tabsRepository.changeCursor(selectedFile.value.content.run {
+            val tabsOffset = text.substring(0, if (offset > text.length) text.length else offset).count { it == '\t' } * 3
+            _state.value = _state.value.copy(
+                pressed = true,
+                previousCursor = offset - tabsOffset
+            )
+            copy(
                 selection = TextRange(
-                    end = offset - text.substring(0, if (offset > text.length) text.length else offset).count { it == '\t' } * 3,
-                    start = selection.start
+                    end = offset - tabsOffset,
+                    start = offset - tabsOffset
                 )
-        )})
+            )
+        })
+    }
+
+    fun onTextRelease(offset: Int) {
+        _state.value = _state.value.copy(pressed = false)
+        tabsRepository.changeCursor(selectedFile.value.content.run {
+            val tabsOffset = text.substring(0, if (offset > text.length) text.length else offset).count { it == '\t' } * 3
+            copy(
+                selection = TextRange(
+                    end = offset - tabsOffset,
+                    start = _state.value.previousCursor
+                )
+            )
+        })
+    }
+
+    fun onTextMove(offset: Int) {
+        if (_state.value.pressed) {
+            tabsRepository.changeCursor(selectedFile.value.content.run {
+                val tabsOffset = text.substring(0, if (offset > text.length) text.length else offset).count { it == '\t' } * 3
+                copy(
+                    selection = TextRange(
+                        end = offset - tabsOffset,
+                        start = _state.value.previousCursor
+                    )
+                )
+            })
+        }
     }
 
 }

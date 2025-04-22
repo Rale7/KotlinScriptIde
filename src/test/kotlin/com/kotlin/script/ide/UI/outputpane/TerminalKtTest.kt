@@ -30,19 +30,24 @@ class TerminalKtTest : BaseComposeTest() {
     @Test
     fun testTerminalInput() {
         val terminalRepository: TerminalRepository by inject()
+        val code = """
+            print("Enter input ")
+            val input = readLine()?.let { it } ?: ""
+        """
 
         super.setContent {
             Terminal()
         }
 
-        val fileName = prepareInputScript("""
-            print("Enter input ")
-            val input = readLine()?.let { it } ?: ""
-        """.trimIndent())
+        val fileName = prepareInputScript(code.trimIndent())
 
         terminalRepository.runScript(temporaryFolder.root.path, fileName)
 
-        Thread.sleep(10000)
+        val originalText = "Starting script $fileName...\n\n"
+
+        composeTestRule.waitUntil(timeoutMillis = 20000) {
+            terminalRepository.output.value.text != originalText
+        }
 
         composeTestRule.onNodeWithContentDescription("terminal")
             .assertTextEquals("Starting script $fileName...\n\nEnter input ", includeEditableText = true)

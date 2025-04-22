@@ -41,6 +41,8 @@ fun EditorPane(
                 moveCursorDown = viewModel::moveCursorDown,
                 moveCursorUp = viewModel::moveCursorUp,
                 onTextAreaPressed = viewModel::onTextAreaPress,
+                onTextAreaReleased = viewModel::onTextRelease,
+                onTextAreaMoved = viewModel::onTextMove,
                 focusRequester = viewModel.focusRequester,
                 modifier = Modifier.fillMaxWidth()
             )

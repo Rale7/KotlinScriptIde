@@ -47,6 +47,8 @@ fun CodingTextArea(
     moveCursorDown: () -> Unit,
     moveCursorUp: () -> Unit,
     onTextAreaPressed: (Int) -> Unit,
+    onTextAreaReleased: (Int) -> Unit,
+    onTextAreaMoved: (Int) -> Unit,
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier,
 ) {
@@ -160,9 +162,11 @@ fun CodingTextArea(
                             }
                         } else false
                     }.onPointerEvent(PointerEventType.Release) { pointerEvent ->
-                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
+                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaReleased)
                     }.onPointerEvent(PointerEventType.Press) { pointerEvent ->
                         onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
+                    }.onPointerEvent(PointerEventType.Move) { pointerEvent ->
+                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaMoved)
                     }.semantics { contentDescription = "codingTextArea" },
                 textStyle = TextStyle(
                     color = Color.White,
@@ -216,7 +220,7 @@ fun onPressTextArea(
     textLayoutResult: TextLayoutResult?,
     horizontalScrollState: ScrollState,
     verticalScrollState: ScrollState,
-    onTextAreaPressed: (Int) -> Unit
+    onEvent: (Int) -> Unit
 ) {
     pointerEvent.changes.firstOrNull()?.let { change ->
         textLayoutResult?.let { layout ->
@@ -225,7 +229,7 @@ fun onPressTextArea(
                 y = change.position.y + verticalScrollState.value
             )
             val offset = layout.getOffsetForPosition(adjustedPosition)
-            onTextAreaPressed(offset)
+            onEvent(offset)
         }
     }
 }
