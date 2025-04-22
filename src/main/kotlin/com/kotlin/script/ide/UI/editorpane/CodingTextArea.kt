@@ -104,7 +104,7 @@ fun CodingTextArea(
         if (highlightTextOffset >= -lineHeight) {
             Box(
                 modifier = Modifier.fillMaxWidth()
-                    .offset(y = if (highlightTextOffset >= 0.dp) highlightTextOffset else 0.dp)
+                    .offset(y = if (highlightTextOffset >= 0.dp) (highlightTextOffset + 2.dp) else 0.dp)
                     .height(if (highlightTextOffset >= 0.dp) lineHeight else lineHeight + highlightTextOffset)
                     .background(
                         color = tonalA3.copy(alpha = 0.5f)
@@ -116,7 +116,7 @@ fun CodingTextArea(
             Column(
                 modifier = Modifier.fillMaxHeight()
                     .width(40.dp)
-                    .padding(start = 10.dp)
+                    .padding(start = 10.dp, top = 2.dp)
                     .background(color = Color.Transparent)
                     .verticalScroll(verticalScrollState)
                     .semantics { contentDescription = "numOfLines" },
