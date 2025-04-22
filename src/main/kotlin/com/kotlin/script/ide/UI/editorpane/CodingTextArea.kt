@@ -12,7 +12,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
@@ -162,11 +161,11 @@ fun CodingTextArea(
                             }
                         } else false
                     }.onPointerEvent(PointerEventType.Release) { pointerEvent ->
-                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaReleased)
+                        onPressTextArea(pointerEvent, textLayoutResult, onTextAreaReleased)
                     }.onPointerEvent(PointerEventType.Press) { pointerEvent ->
-                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaPressed)
+                        onPressTextArea(pointerEvent, textLayoutResult, onTextAreaPressed)
                     }.onPointerEvent(PointerEventType.Move) { pointerEvent ->
-                        onPressTextArea(pointerEvent, textLayoutResult, horizontalScrollState, verticalScrollState, onTextAreaMoved)
+                        onPressTextArea(pointerEvent, textLayoutResult, onTextAreaMoved)
                     }.semantics { contentDescription = "codingTextArea" },
                 textStyle = TextStyle(
                     color = Color.White,
@@ -218,17 +217,11 @@ fun CodingTextArea(
 fun onPressTextArea(
     pointerEvent: PointerEvent,
     textLayoutResult: TextLayoutResult?,
-    horizontalScrollState: ScrollState,
-    verticalScrollState: ScrollState,
     onEvent: (Int) -> Unit
 ) {
     pointerEvent.changes.firstOrNull()?.let { change ->
         textLayoutResult?.let { layout ->
-            val adjustedPosition = Offset(
-                x = change.position.x + horizontalScrollState.value,
-                y = change.position.y + verticalScrollState.value
-            )
-            val offset = layout.getOffsetForPosition(adjustedPosition)
+            val offset = layout.getOffsetForPosition(change.position)
             onEvent(offset)
         }
     }
