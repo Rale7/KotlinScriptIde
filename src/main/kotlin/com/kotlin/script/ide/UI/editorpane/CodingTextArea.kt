@@ -129,7 +129,8 @@ fun CodingTextArea(
                         fontFamily = FontFamily.Monospace,
                         textAlign = TextAlign.Right,
                         modifier = Modifier.fillMaxWidth().padding(end = 4.dp),
-                        fontSize = 15.sp
+                        fontSize = 15.sp,
+                        lineHeight = with(LocalDensity.current) {lineHeight.toSp()}
                     )
                 }
 
@@ -168,6 +169,7 @@ fun CodingTextArea(
                     fontFamily = FontFamily.Monospace,
                     fontSize = 15.sp,
                     textIndent = TextIndent.None,
+                    lineHeight = with(LocalDensity.current) {lineHeight.toSp()}
                 ),
                 cursorBrush = SolidColor(Color.White),
                 visualTransformation = CombinedTransformation(),
